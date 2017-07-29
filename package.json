@@ -1,0 +1,19 @@
+{
+  "name": "bro-rest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.5.0",
+    "bro-ids": "^1.0.3",
+    "express": "^4.15.3",
+    "lodash": "^4.17.4",
+    "network": "^0.3.2",
+    "tmp": "0.0.31"
+  }
+}
