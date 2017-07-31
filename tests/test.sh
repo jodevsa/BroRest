@@ -4,10 +4,10 @@ i=1
 
 while [ $i ]
 do
-  sha256sum /tmp/tmp-15916zeBAVNB85RE6/conn.log
-  wc -l /tmp/tmp-15916zeBAVNB85RE6/conn.log
-  sha256sum ../clients/conn.txt
-  wc -l ../clients/conn.txt
+  sha256sum /tmp/tmp-66254Lc93NWgbhDr/conn.log
+  wc -l /tmp/tmp-66254Lc93NWgbhDr/conn.log
+  sha256sum ../clients/node/conn1.txt
+  wc -l ../clients/node/conn1.txt
   sleep 2;
   clear
 done

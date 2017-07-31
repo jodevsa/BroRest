@@ -9,7 +9,7 @@ class feedReader:
         self.id=ID;
 
     def _read(self):
-        r=request.urlopen(self.url+"/bro/capture/session/"+self.id+"/conn/"+str(self.offset));
+        r=request.urlopen(self.url+"/bro/session/"+self.id+"/conn/"+str(self.offset));
         st=r.read().decode("utf-8")
         response=json.loads(st);
         lines=response["data"];

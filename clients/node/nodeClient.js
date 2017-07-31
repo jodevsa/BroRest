@@ -29,19 +29,17 @@ class broRestClient {
     }
     _feed(logType, offset, id, cb) {
         console.log(this.id, "id1")
-        console.log(this.url + ":" + this.port + "/bro/capture/session/" + id + "/" + logType + "/" + offset)
+        console.log(this.url + ":" + this.port + "/bro/session/" + id + "/" + logType + "/" + offset)
         request({
-            url: this.url + ":" + this.port + "/bro/capture/session/" + id + "/" + logType + "/" + offset,
+            url: this.url + ":" + this.port + "/bro/session/" + id + "/" + logType + "/" + offset,
             method: "GET"
         }, function(err, res) {
-            let data = JSON.parse(res.body);
+            let body = JSON.parse(res.body);
 
-            this.id = data.id;
-            console.log(this.id);
 
             cb({
-                "lines": data,
-                "size": data.length
+                "lines": body.data,
+                "size": body.data.length
             });
         })
 
@@ -55,7 +53,6 @@ class broRestClient {
         asynclooper.on("loop", () => {
             this._feed(logType, offset, this.id, (data) => {
                 let lines = data.lines;
-                if(lines instanceof Array){
                 //  console.log("data",data)
                 offset += data.size;
 
@@ -64,12 +61,11 @@ class broRestClient {
                 }
                 asynclooper.emit("loop");
 
-              }
-              else{
+          //    else{
                 ///control messages//
-                main_emitter.emit("EOF");
+            //    main_emitter.emit("EOF");
 
-              }
+            //  }
 
             });
         });

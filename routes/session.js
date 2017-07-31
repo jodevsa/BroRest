@@ -115,7 +115,6 @@ router.get("/:id/:log/:number/", function(req, res) {
     let log = req.params.log;
     bro.emitter.once(log, () => {
         mini_emitter.emit("data");
-        console.log("emitted from bro.emitetr");
         //bro.emitter.removeListener(log,function(){});
 
 
@@ -128,7 +127,7 @@ router.get("/:id/:log/:number/", function(req, res) {
     }
     let i = parseInt(req.params.number);
 
-    console.log("Number:", i)
+
     if (i === NaN) {
         res.end({
             "data": []
@@ -136,8 +135,10 @@ router.get("/:id/:log/:number/", function(req, res) {
         return;
     }
     bro.consumeLines(i, log, function(data) {
+
         let sent = false;
         if (data.data.length === 0) {
+
             //to solve memory leak in bro.emitter event emitter/
             /// must re-code this agian -.-
             let endFunc = (code) => {
@@ -153,7 +154,6 @@ router.get("/:id/:log/:number/", function(req, res) {
             mini_emitter.once("data", () => {
                 //end memory leak with same pointer of function
                 bro.emitter.removeListener("end", endFunc);
-
                 bro.consumeLines(i, log, function(data) {
                     if (!sent)
 
