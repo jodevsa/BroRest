@@ -1,7 +1,7 @@
 #!/bin/bash
-count=484;
+count=1;
 
-head -n $count /tmp/tmp-8154GiYqJH0xuIcx/conn.log | sha256sum
-head -n $count conn.txt | sha256sum
-sed '484q;d' /tmp/tmp-8154GiYqJH0xuIcx/conn.log
-sed '484q;d' conn.txt
+head -n $count /tmp/tmp-15916zeBAVNB85RE6/conn.log | sha256sum
+head -n $count ../clients/conn.txt | sha256sum
+sed '1q;d' /tmp/tmp-15916zeBAVNB85RE6/conn.log
+sed '1q;d' ../clients/conn.txt
