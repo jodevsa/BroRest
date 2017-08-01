@@ -3,6 +3,7 @@ const active_sessions = require('../lib/activesessions');
 var router = express.Router();
 var _ = require('lodash/core');
 const EventEmitter = require('events');
+const fs = require('fs-extra')
 /**
  * @api {get} /bro/session/:id/:status
  Check session status
@@ -24,14 +25,16 @@ router.get("/:id/status", function(req, res) {
         res.json({
             "error": "session does not exist!"
         })
+
     }
+    else{
     res.json({
         "id": bro.id,
         "running": bro.running,
         "stderr": bro.broErrorLog,
         "logPath": bro.logPath
     })
-
+  }
 })
 
 /**
@@ -59,6 +62,40 @@ router.get("/:id/stop", function(req, res) {
     });
 
 });
+
+
+
+/**
+ * @api {get} /bro/session/:id/:delete
+ Delete's session data logs
+ * @apiName deleteSession
+ * @apiGroup Session
+ *
+ * @apiParam {String} Session ID
+ *
+ * @apiSuccess {String} notice Results of session delete.
+ * @apiError {String} sessionNotFound session does not exists
+ */
+router.get("/:id/delete", function(req, res) {
+    let id = req.params.id;
+    let bro = active_sessions[id];
+    delete active_sessions[id];
+    if (bro === undefined) {
+        return res.json({
+            "error": "session does not exist!"
+        });
+    }
+    if(bro.running)
+      bro.stop();
+    fs.remove(bro.logPath, function () {
+    res.json({
+        "notice": "session id:" + id + " successfully deleted!"
+    });
+    });
+
+});
+
+
 /**
  * @api {get} /bro/session/active Lists all active sessions
  * @apiName activeSessions
@@ -175,6 +212,40 @@ router.get("/:id/:log/:number/", function(req, res) {
 
 
 
+/**
+ * @api {get} /bro/session/:id/stats/
+ Session stats
+ * @apiName sessionStats
+ * @apiGroup Session
+ *
+ * @apiParam {String} Session ID
+ *
+ * @apiSuccess {Object[]} stats stats
+ * @apiSuccess {Number} total total # of log files
+ * @apiError {String} sessionNotFound session does not exists
+ */
+router.get("/:id/stats", function(req, res) {
+    let id = req.params.id;
+    let bro = active_sessions[id];
+    if (bro === undefined) {
+        res.json({
+            "error": "session does not exist!"
+        })
+    }
+    else{
+    let stats = {};
+    let i = 0;
+    _.forEach(bro.filestats, (value, key) => {
+        stats[key] = value.length;
+        i += 1;
+    });
+    res.json({
+        "total": i,
+        "stats": stats
+    });
+
+}
+});
 
 
 module.exports = router;
